@@ -2,6 +2,7 @@ from db.run_sql import run_sql
 
 from models.artist import Artist
 from models.album import Album
+import repositories.artist_repository as artist_repository
 
 def save(album):
     sql = "INSERT INTO albums (title, genre, artist_id) VALUES (%s, %s, %s) RETURNING *"
@@ -24,6 +25,18 @@ def select(id):
     
     if results:
         result = results[0]
-        album = Album(result['name'], result['id'])
+        album = Album(result['title'], result['genre'], result['artist_id'], result['id'])
     
     return album
+
+def select_all():
+    albums = []
+    
+    sql = "SELCT * FROM albums"
+    results = run_sql(sql)
+    
+    for row in results:
+        artist = artist_repository.select(row['artist_id'])
+        album = Album(row['title'], row['genre'], artist, row['id'])
+        albums.append(album)
+    return albums
