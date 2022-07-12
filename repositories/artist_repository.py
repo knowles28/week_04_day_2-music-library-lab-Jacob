@@ -12,6 +12,11 @@ def save(artist):
     return artist
 
 
+def delete(id):
+    sql = "DELETE FROM artists WHERE id =%s"
+    values = [id]
+    run_sql(sql, values)
+
 def delete_all():
     sql = "DELETE FROM artists"
     run_sql(sql)
